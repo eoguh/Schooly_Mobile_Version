@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "icon": "./src/assets/images/logo.png",
+    "scheme": "acme",
+    "userInterfaceStyle": "automatic",
+    "orientation": "default",
+    "web": {
+      "output": "static"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFFFFF",
+          "image": "./src/assets/images/logo.png",
+          "imageWidth": 200
+        }
+      ],
+      [
+        "expo-router",
+        {
+          "origin": "https://n"
+        }
+      ],
+      "expo-secure-store",
+      "expo-font"
+    ],
+    "name": "Schooley",
+    "slug": "final-year-project",
+    "extra": {
+      "router": {
+        "origin": "https://n"
+      },
+      "eas": {
+        "projectId": "7ffd4d82-86a7-4f59-8dd7-b66154b839ad"
+      }
+    },
+    "android": {
+      "package": "com.bardsai.schooley"
+    }
+  }
+}
