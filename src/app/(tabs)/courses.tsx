@@ -180,73 +180,110 @@ export default function CoursesScreen() {
   };
 
   const VideoPlayer = () => {
-    if (!currentVideo) return null;
+  if (!currentVideo) return null;
 
-    const videoId = getVideoId(currentVideo.videoUrl);
-    const embedUrl = videoId
-      ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&controls=1&modestbranding=1`
-      : currentVideo.videoUrl;
+  const videoId = getVideoId(currentVideo.videoUrl);
 
-    return (
-      <Modal
-        visible={videoPlayerVisible}
-        animationType="slide"
-        presentationStyle="fullScreen"
-        onRequestClose={closeVideoPlayer}
-      >
-        <SafeAreaView className="flex-1 bg-black">
-          <StatusBar barStyle="light-content" backgroundColor="#000000" />
+  const embedHtml = videoId ? `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <style>
+          html, body { margin: 0; padding: 0; background-color: #000; height: 100%; }
+          .video-container { position: relative; width: 100%; height: 100%; }
+          iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        </style>
+      </head>
+      <body>
+        <div class="video-container">
+          <iframe
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&showinfo=0&controls=1&modestbranding=1&origin=https://www.youtube.com"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </body>
+    </html>
+  ` : '';
 
-          {/* Header */}
-          <View className="px-4 py-3 bg-black/90 flex-row items-center justify-between">
-            <TouchableOpacity
-              onPress={closeVideoPlayer}
-              className="p-2 rounded-full bg-white/20"
-            >
-              <Ionicons name="close" size={24} color="white" />
-            </TouchableOpacity>
+  return (
+    <Modal
+      visible={videoPlayerVisible}
+      animationType="slide"
+      presentationStyle="fullScreen"
+      onRequestClose={closeVideoPlayer}
+    >
+      <SafeAreaView className="flex-1 bg-black">
+        <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
-            <View className="flex-1 mx-4">
-              <Text className="text-white font-bold text-base" numberOfLines={1}>
-                {currentVideo.title}
-              </Text>
-              <Text className="text-white/70 text-sm" numberOfLines={1}>
-                {currentVideo.topicName}
-              </Text>
-            </View>
+        {/* Header */}
+        <View className="px-4 py-3 bg-black/90 flex-row items-center justify-between">
+          <TouchableOpacity
+            onPress={closeVideoPlayer}
+            className="p-2 rounded-full bg-white/20"
+          >
+            <Ionicons name="close" size={24} color="white" />
+          </TouchableOpacity>
 
-            <TouchableOpacity className="p-2 rounded-full bg-white/20">
-              <Ionicons name="bookmark-outline" size={24} color="white" />
-            </TouchableOpacity>
+          <View className="flex-1 mx-4">
+            <Text className="text-white font-bold text-base" numberOfLines={1}>
+              {currentVideo.title}
+            </Text>
+            <Text className="text-white/70 text-sm" numberOfLines={1}>
+              {currentVideo.topicName}
+            </Text>
           </View>
 
-          {/* Video Player */}
-          <View className="flex-1 bg-black">
-            {videoLoading && (
-              <View className="absolute inset-0 bg-black items-center justify-center z-10">
-                <ActivityIndicator size="large" color="#FF0000" />
-                <Text className="text-white mt-4">Loading video...</Text>
-              </View>
-            )}
+          <TouchableOpacity className="p-2 rounded-full bg-white/20">
+            <Ionicons name="bookmark-outline" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
 
+        {/* Video Player */}
+        <View className="flex-1 bg-black">
+          {videoLoading && (
+            <View className="absolute inset-0 bg-black items-center justify-center z-10">
+              <ActivityIndicator size="large" color="#FF0000" />
+              <Text className="text-white mt-4">Loading video...</Text>
+            </View>
+          )}
+
+          {videoId ? (
             <WebView
-              source={{ uri: embedUrl }}
+              source={{ html: embedHtml }}
               style={{ flex: 1, backgroundColor: 'black' }}
               onLoadEnd={() => setVideoLoading(false)}
               allowsFullscreenVideo={true}
               mediaPlaybackRequiresUserAction={false}
+              allowsInlineMediaPlayback={true}
               javaScriptEnabled={true}
               domStorageEnabled={true}
               startInLoadingState={false}
-              scalesPageToFit={true}
+              mixedContentMode="compatibility"
+              originWhitelist={['*']}
               bounces={false}
               scrollEnabled={false}
             />
-          </View>
-        </SafeAreaView>
-      </Modal>
-    );
-  };
+          ) : (
+            <View className="flex-1 items-center justify-center px-6">
+              <Text className="text-white text-center">
+                Couldn't parse this video link. Try opening it directly on YouTube.
+              </Text>
+              <TouchableOpacity
+                onPress={() => openYouTubeLink(currentVideo.videoUrl)}
+                className="mt-4 bg-red-500 px-6 py-3 rounded-xl"
+              >
+                <Text className="text-white font-semibold">Open in YouTube</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </SafeAreaView>
+    </Modal>
+  );
+};
 
   if (loading) {
     return (
