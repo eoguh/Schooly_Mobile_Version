@@ -268,7 +268,7 @@ export default function OTPVerificationScreen() {
                     ]}
                   >
                     <TextInput
-                      ref={(ref) => (inputRefs.current[index] = ref)}
+                      ref={(ref) => { inputRefs.current[index] = ref; }}
                       value={digit}
                       onChangeText={(value) => handleOtpChange(value, index)}
                       onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}

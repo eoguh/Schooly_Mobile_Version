@@ -1,6 +1,6 @@
 {
   "expo": {
-    "icon": "./src/assets/images/logo.png",
+    "icon": "./src/assets/images/icon-1024.png",
     "scheme": "acme",
     "userInterfaceStyle": "automatic",
     "orientation": "default",
@@ -12,7 +12,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#FFFFFF",
-          "image": "./src/assets/images/logo.png",
+          "image": "./src/assets/images/icon-1024.png",
           "imageWidth": 200
         }
       ],
@@ -32,11 +32,20 @@
         "origin": "https://n"
       },
       "eas": {
-        "projectId": "7ffd4d82-86a7-4f59-8dd7-b66154b839ad"
+        "projectId": "2b69e1cd-c856-4e05-ad75-37abbabc01d0"
       }
     },
     "android": {
       "package": "com.bardsai.schooley"
-    }
+    },
+    "version": "1.0.0",
+    "ios": {
+      "bundleIdentifier": "com.bardsai.schooley",
+      "supportsTablet": true,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "owner": "frankimma"
   }
 }

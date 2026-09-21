@@ -216,7 +216,7 @@ export default function VerifyResetCodeScreen() {
                     }`}
                 >
                   <TextInput
-                    ref={(ref) => (inputRefs.current[index] = ref)}
+                    ref={(ref) => { inputRefs.current[index] = ref; }}
                     value={digit}
                     onChangeText={(value) => handleCodeChange(value, index)}
                     onKeyPress={({ nativeEvent }) => handleKeyPress(index, nativeEvent.key)}

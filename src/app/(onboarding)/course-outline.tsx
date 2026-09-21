@@ -7,19 +7,9 @@ import { useOnboarding } from "@/context/OnboardingContext";
 import { useState, useEffect } from "react";
 import { Ionicons } from '@expo/vector-icons';
 
-interface UserAcademicInfo {
-  id: number;
-  course_of_study: string;
-  level_of_study: string;
-  subjects: string;
-  daily_attention_target: number;
-  user: number;
-}
-
 export default function CourseOutlineScreen() {
-  const { saveAcademicInfo, isLoading } = useAuth();
+  const { saveAcademicInfo, academicInfo, isLoading } = useAuth();
   const { data: onboardingData, resetData, isComplete } = useOnboarding();
-  const [academicInfo, setAcademicInfo] = useState<UserAcademicInfo | null>(null);
   const [saving, setSaving] = useState(false);
 
   const handleNext = () => {
@@ -41,22 +31,20 @@ export default function CourseOutlineScreen() {
       return;
     }
 
-    saveAcademicInfoAndGetResponse();
+    persistAcademicInfo();
   }, []);
 
-  const saveAcademicInfoAndGetResponse = async () => {
+  const persistAcademicInfo = async () => {
     try {
       setSaving(true);
 
-      // Save the academic info and get the response
-      const response = await saveAcademicInfo({
+      // AuthContext stores the saved record itself; nothing is returned here.
+      await saveAcademicInfo({
         course_of_study: onboardingData.course_of_study,
         subjects: onboardingData.subjects,
         level_of_study: onboardingData.level_of_study,
         daily_attention_target: onboardingData.daily_attention_target,
       });
-
-      setAcademicInfo(response);
 
     } catch (error: any) {
       console.error('❌ Error saving academic info:', error);
@@ -67,7 +55,7 @@ export default function CourseOutlineScreen() {
         [
           {
             text: 'Retry',
-            onPress: saveAcademicInfoAndGetResponse
+            onPress: persistAcademicInfo
           },
           {
             text: 'Go Back',
